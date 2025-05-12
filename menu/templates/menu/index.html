@@ -1,0 +1,33 @@
+{% extends 'menu/base.html' %}
+
+{% block content %}
+  <div class="menu-container">
+    <h1>OS SIMULATOR</h1>
+    <div class="menu-grid">
+      <a href="{% url 'processes:index' %}" class="menu-card ps">
+        <div class="menu-icon">PS</div>
+        <div class="menu-label">Process Scheduling</div>
+      </a>
+      <a href="{% url 'memory:index' %}" class="menu-card pr">
+        <div class="menu-icon">PR</div>
+        <div class="menu-label">Page Replacement</div>
+      </a>
+      <a href="{% url 'memory:index' %}" class="menu-card ma">
+        <div class="menu-icon">MA</div>
+        <div class="menu-label">Memory Allocation</div>
+      </a>
+      <a href="{% url 'sync:index' %}" class="menu-card sy">
+        <div class="menu-icon">SY</div>
+        <div class="menu-label">Synchronization</div>
+      </a>
+      <a href="{% url 'io_sim:index' %}" class="menu-card io">
+        <div class="menu-icon">IO</div>
+        <div class="menu-label">I/O Simulation</div>
+      </a>
+      <a href="{% url 'disk:index' %}" class="menu-card ds">
+        <div class="menu-icon">DS</div>
+        <div class="menu-label">Disk Scheduling</div>
+      </a>
+    </div>
+  </div>
+{% endblock %}
