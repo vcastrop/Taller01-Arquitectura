@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'sync',
     'io_sim',
     'disk',
+    'paginacion',
 ]
 
 
