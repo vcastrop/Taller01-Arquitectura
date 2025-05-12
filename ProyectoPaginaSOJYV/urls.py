@@ -22,6 +22,7 @@ urlpatterns = [
     path('', include('menu.urls')),           # menú principal
     path('processes/', include('processes.urls')),
     path('memory/',    include('memory.urls')),
+    path('paginacion/', include('paginacion.urls')),
     path('sync/',      include('sync.urls')),
     path('io/',        include('io_sim.urls')),
     path('disk/',      include('disk.urls')),
