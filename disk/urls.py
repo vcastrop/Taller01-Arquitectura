@@ -1,7 +1,5 @@
 from django.urls import path
 from . import views
-
-app_name = 'disk'
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.disk_view, name='index'),
 ]
