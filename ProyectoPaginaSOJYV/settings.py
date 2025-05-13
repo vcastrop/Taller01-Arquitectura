@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     # Tus apps
     'menu',
     'processes',
-    'memory',
     'sync',
     'io_sim',
     'disk',
@@ -90,7 +89,7 @@ TEMPLATES = [
 ]
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [ BASE_DIR / 'menu' / 'static' ]
+STATICFILES_DIRS = [ BASE_DIR / 'menu' / 'static', ]
 
 WSGI_APPLICATION = 'ProyectoPaginaSOJYV.wsgi.application'
 

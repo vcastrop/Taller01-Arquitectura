@@ -1,0 +1,21 @@
+{% extends 'menu/base.html' %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'sync/MYcss/style.css' %}">
+{% endblock %}
+
+{% block content %}
+  <h2>Synchronization Module</h2>
+  <div class="sync-menu">
+    <a href="{% url 'sync:prodcon' %}" class="sync-card">
+      <div class="sync-icon">IO</div>
+      <div class="sync-label">Producer-Consumer</div>
+    </a>
+    <a href="{% url 'sync:dining' %}" class="sync-card">
+      <div class="sync-icon">DP</div>
+      <div class="sync-label">Dining Philosophers</div>
+    </a>
+  </div>
+{% endblock %}
+>

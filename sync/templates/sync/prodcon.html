@@ -1,0 +1,35 @@
+{% extends 'menu/base.html' %}
+
+{% block content %}
+  <h2>Producer‐Consumer Simulation</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    <label>
+      Queue size:
+      <input type="number" name="size" value="{{ size }}" min="2">
+    </label>
+    <label style="margin-left:1em;">
+      Producer priority:
+      <input type="number" step="0.1" name="prod_prio" value="{{ prod_prio }}" min="0">
+    </label>
+    <label style="margin-left:1em;">
+      Consumer priority:
+      <input type="number" step="0.1" name="cons_prio" value="{{ cons_prio }}" min="0">
+    </label>
+    <label style="margin-left:1em;">
+      Variation:
+      <input type="number" step="0.1" name="variation" value="{{ variation }}" min="0">
+    </label>
+    <button type="submit">Run</button>
+  </form>
+
+  {% if logs %}
+    <h3>Output:</h3>
+    <pre style="background:#f4f4f4; padding:1em; white-space: pre-wrap;">
+{% for line in logs %}
+{{ line }}
+{% endfor %}
+    </pre>
+  {% endif %}
+{% endblock %}

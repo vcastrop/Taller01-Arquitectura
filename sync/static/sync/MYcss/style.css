@@ -1,0 +1,29 @@
+/* sync/static/sync/MYcss/style.MYcss */
+
+.sync-menu {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+.sync-card {
+  text-decoration: none;
+  text-align: center;
+}
+.sync-icon {
+  width: 80px; height: 80px;
+  background: #4b4b4b;
+  color: white;
+  line-height: 80px;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  margin-bottom: .5rem;
+  transition: background 0.2s;
+}
+.sync-card:hover .sync-icon {
+  background: #2f2f2f;
+}
+.sync-label {
+  font-weight: bold;
+  color: #333;
+}

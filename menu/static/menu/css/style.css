@@ -30,8 +30,10 @@
 .menu-icon {
   width: 80px;
   height: 80px;
-  border: 3px solid #fff;
-  border-radius: 60%;
+- border: 3px solid #fff;
+- border-radius: 60%;
++ border: 3px solid #333;
++ border-radius: 8px;    /* esquinas redondeadas o pon 0 para esquinas totalmente rectas */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,12 +43,13 @@
   color: #fff;
   transition: transform 0.2s;
 }
-.menu-card.ps .menu-icon { background: #1f2f66; }
-.menu-card.pr .menu-icon { background: #3a4b1b; }
-.menu-card.ma .menu-icon { background: #542a73; }
-.menu-card.sy .menu-icon { background: #906c1f; }
-.menu-card.io .menu-icon { background: #7b2f2f; }
-.menu-card.ds .menu-icon { background: #277a3a; }
+
+.menu-card.ps .menu-icon { background: #fd2626 ; }
+.menu-card.pr .menu-icon { background: #fd9b26; }
+.menu-card.ma .menu-icon { background: #caed1a; }
+.menu-card.sy .menu-icon { background: #6aed1a; }
+.menu-card.io .menu-icon { background: #1aed7d; }
+.menu-card.ds .menu-icon { background: #1added; }
 
 .menu-label {
   font-size: 1rem;

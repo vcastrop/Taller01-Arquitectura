@@ -2,9 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>I/O Simulator</title>
 </head>
 <body>
+    <h1>Simulador de Acceso a Impresora Compartida</h1>
 
+    <form method="post">
+        {% csrf_token %}
+        <label>Empleado ID:</label>
+        <input type="text" name="nombre" required><br>
+
+        <label>Duración de impresión (segundos):</label>
+        <input type="number" name="duracion" step="0.1" required><br>
+
+        <label>Prioridad (menor número = más urgente):</label>
+        <input type="number" name="prioridad" required><br>
+
+        <button type="submit" name="action" value="add">Agregar a la Cola</button>
+        <button type="submit" name="action" value="simulate">Simular</button>
+    </form>
+
+    <h2>Cola de Impresión</h2>
+    {% if queue %}
+        <ul>
+        {% for item in queue %}
+            <li>{{ item.id }} - Duración: {{ item.duracion }}s - Prioridad: {{ item.prioridad }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay empleados en la cola.</p>
+    {% endif %}
+
+    {% if result %}
+        <h2>Log de la Simulación</h2>
+        <ul>
+        {% for line in result %}
+            <li>{{ line }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
 </body>
 </html>

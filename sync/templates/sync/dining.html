@@ -1,0 +1,27 @@
+{% extends 'menu/base.html' %}
+
+{% block content %}
+  <h2>Dining Philosophers Simulation</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    <label>
+      Number of philosophers:
+      <input type="number" name="n" value="{{ n }}" min="2" max="20">
+    </label>
+    <label style="margin-left:1em;">
+      Iterations:
+      <input type="number" name="iterations" value="{{ iterations }}" min="1">
+    </label>
+    <button type="submit">Run</button>
+  </form>
+
+  {% if logs %}
+    <h3>Output:</h3>
+    <pre style="background:#f4f4f4; padding:1em; white-space: pre-wrap;">
+{% for line in logs %}
+{{ line }}
+{% endfor %}
+    </pre>
+  {% endif %}
+{% endblock %}

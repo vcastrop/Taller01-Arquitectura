@@ -21,9 +21,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('menu.urls')),           # menú principal
     path('processes/', include('processes.urls')),
-    path('memory/',    include('memory.urls')),
     path('paginacion/', include('paginacion.urls')),
-    path('sync/',      include('sync.urls')),
+    path('sync/',      include('sync.urls', namespace='sync')),
     path('io/',        include('io_sim.urls')),
     path('disk/', include(('disk.urls', 'disk'), namespace='disk')),
     path('paginacion/', include('paginacion.urls')),
