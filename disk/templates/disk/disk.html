@@ -1,10 +1,40 @@
+<!-- disk.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Disk Scheduling Simulator</title>
 </head>
 <body>
+    <h1>Disk Scheduling</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="current">Current Position:</label>
+        <input type="number" name="current" value="{{ request.POST.current }}" required><br>
 
+        <label for="previous">Previous Request:</label>
+        <input type="number" name="previous" value="{{ request.POST.previous }}" required><br>
+
+        <label for="requests">Requests (space separated):</label>
+        <input type="text" name="requests" value="{{ request.POST.requests }}" required><br>
+
+        <label for="cylinders">Number of Cylinders:</label>
+        <input type="number" name="cylinders" value="{{ request.POST.cylinders }}" required><br>
+
+        <label for="algorithm">Select Algorithm:</label>
+        <select name="algorithm">
+            <option value="fcfs" {% if request.POST.algorithm == "fcfs" %}selected{% endif %}>FCFS</option>
+            <option value="sstf" {% if request.POST.algorithm == "sstf" %}selected{% endif %}>SSTF</option>
+            <option value="scan" {% if request.POST.algorithm == "scan" %}selected{% endif %}>SCAN</option>
+        </select><br>
+
+        <button type="submit">Simulate</button>
+    </form>
+
+    {% if result %}
+        <h2>Results</h2>
+        <p>Total Seek Time: {{ result.seek_time }}</p>
+        <img src="data:image/png;base64,{{ result.graph }}" alt="Seek Graph">
+    {% endif %}
 </body>
 </html>
