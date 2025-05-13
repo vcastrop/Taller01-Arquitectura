@@ -1,10 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'menu/base.html' %}
+{% load static %}
 
-</body>
-</html>
+{% block content %}
+  <h2>Page Replacement Simulator</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    <label for="size">Cache size:</label>
+    <input type="number" name="size" id="size" min="1" required>
+
+    <label for="requests">Requests (coma-separated):</label>
+    <input type="text" name="requests" id="requests"
+           placeholder="e.g. 1,3,2,4,1" required>
+
+    <label for="algorithm">Algorithm:</label>
+    <select name="algorithm" id="algorithm">
+      <option value="FIFO">FIFO</option>
+      <option value="LRU">LRU</option>
+    </select>
+
+    <button type="submit">Simular</button>
+  </form>
+
+  {% if resultado %}
+    <h3>Resultados</h3>
+    <p>
+  Hits: {{ resultado.hits }}
+  Misses: {{ resultado.miss }}
+  Hit ratio: {{ resultado.hit_ratio }}
+</p>
+
+
+
+    <table>
+      <thead>
+        <tr><th>#</th><th>Status</th><th>Cache state</th>
+          {% if resultado.states.0.lru %}<th>LRU ages</th>{% endif %}
+        </tr>
+      </thead>
+      <tbody>
+      {% for s in resultado.states %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ s.status }}</td>
+          <td>{{ s.cache }}</td>
+          {% if s.lru %}<td>{{ s.lru }}</td>{% endif %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+{% endblock %}

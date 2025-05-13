@@ -26,5 +26,4 @@ urlpatterns = [
     path('sync/',      include('sync.urls')),
     path('io/',        include('io_sim.urls')),
     path('disk/',      include('disk.urls')),
-    path('paginacion/', include('paginacion.urls')),
 ]
