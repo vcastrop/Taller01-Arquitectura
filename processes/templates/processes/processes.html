@@ -1,10 +1,95 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<form method="post" action=".">
+  {% csrf_token %}
 
-</body>
-</html>
+  <!-- Tabla de procesos existente -->
+  <table id="process-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Arrival Time</th>
+        <th>Burst Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Aquí irán las filas agregadas dinámicamente -->
+      <tr>
+        <td>1</td>
+        <td><input type="number" name="at_1" min="0" required></td>
+        <td><input type="number" name="bt_1" min="1" required></td>
+      </tr>
+    </tbody>
+  </table>
+  <button type="button" id="add-row">Añadir Proceso</button>
+
+
+<input type="hidden" name="count" id="count" value="1">
+
+  <!-- Selector de algoritmo -->
+  <label for="algorithm">Elige algoritmo:</label>
+  <select name="algorithm" id="algorithm">
+    <option value="FCFS">First Come First Serve (FCFS)</option>
+    <option value="RR">Round Robin (RR)</option>
+  </select>
+
+  <!-- Campo de quantum, oculto por defecto -->
+  <div id="quantum-field" style="display: none;">
+    <label for="quantum">Quantum:</label>
+    <input type="number" name="quantum" id="quantum" min="1" value="1">
+  </div>
+
+  <button type="submit">Simular</button>
+</form>
+
+{% if results %}
+  <h2>Resultados</h2>
+  <p>AVG WT: {{ avg_wt }} AVG TAT: {{ avg_tat }}</p>
+
+  <!-- Diagrama de Gantt simple -->
+  <div class="gantt-seg"
+     style="left:{{ seg.left }}px; width:{{ seg.width }}px">
+  {% if seg.no > 0 %}P{{ seg.no }}{% endif %}
+</div>
+
+
+  <!-- Tabla de resultados -->
+  <table>
+    <thead>
+      <tr>
+        <th>#</th><th>AT</th><th>BT</th><th>CT</th><th>TAT</th><th>WT</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in results %}
+      <tr>
+        <td>{{ p.no }}</td>
+        <td>{{ p.at }}</td>
+        <td>{{ p.bt }}</td>
+        <td>{{ p.ct }}</td>
+        <td>{{ p.tat }}</td>
+        <td>{{ p.wt }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+<script>
+  const addRowBtn  = document.getElementById('add-row');
+  const countField = document.getElementById('count');
+  const tbody      = document.querySelector('#process-table tbody');
+
+  addRowBtn.addEventListener('click', () => {
+    const next = tbody.querySelectorAll('tr').length + 1;
+    const tr   = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${next}</td>
+      <td><input type="number" name="at_${next}" min="0" required></td>
+      <td><input type="number" name="bt_${next}" min="1" required></td>
+    `;
+    tbody.appendChild(tr);
+    countField.value = next;
+  });
+</script>
+
+
+
