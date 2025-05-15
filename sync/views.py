@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from algoritmos.dining import simulate_dining
-from algoritmos.producer_consumer import simulate_pc
+from algoritmos.producer_consumer import simulate_pc_sync as simulate_pc
 
 def dining_philosophers(request):
     # valores por defecto

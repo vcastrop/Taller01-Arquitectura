@@ -1,69 +1,35 @@
-# algoritmos/producer_consumer.py
-
-import queue
-import threading
-import time
 import random
 
-def simulate_pc(queue_size=100, prod_prio=6.0, cons_prio=2.0, variation=2.0):
-    """
-    Simula un productor y un consumidor usando hilos,
-    y devuelve una lista de líneas (strings) con el log completo.
-    """
-    # Esta bandera la usan ambos hilos para detenerse
-    exit_flag = threading.Event()
+
+def simulate_pc_sync(queue_size=20, prod_prio=6.0, cons_prio=2.0, variation=2.0, max_steps=100):
     logs = []
+    # Empezamos la cola a la mitad
+    count = queue_size // 2
+    logs.append(f"Initial queue size = {count}")
 
-    # Compartimos esta cola de tamaño fijo
-    q = queue.Queue(maxsize=queue_size)
+    # Proporción de probabilidad de producir vs consumir
+    p_prod = prod_prio / (prod_prio + cons_prio)
 
-    # La llenamos a la mitad
-    for _ in range(queue_size // 2):
-        q.put(1)
+    for step in range(1, max_steps + 1):
+        # Decidimos si producimos o consumimos
+        if random.random() < p_prod:
+            # intento producir
+            if count < queue_size:
+                count += 1
+                logs.append(f"[{step}] Produce → size={count}")
+            else:
+                logs.append(f"[{step}] Producer wins (queue full at {count})")
+                break
+        else:
+            # intento consumir
+            if count > 0:
+                count -= 1
+                logs.append(f"[{step}] Consume  → size={count}")
+            else:
+                logs.append(f"[{step}] Consumer wins (queue empty)")
+                break
+    else:
+        logs.append(f"Reached max_steps={max_steps} without finish")
 
-    # Productor
-    class Producer(threading.Thread):
-        def __init__(self, name, priority):
-            super().__init__(name=name)
-            self.priority = priority
-        def run(self):
-            logs.append(f"Producer {self.name} started")
-            while not exit_flag.is_set():
-                time.sleep(self.priority / 10 if self.priority else variation * random.random())
-                try:
-                    q.put(1, timeout=1)
-                    logs.append(f"Producer {self.name} enqueued → size={q.qsize()}")
-                except queue.Full:
-                    # cola llena: gana productor
-                    logs.append("Producer wins (queue full)")
-                    exit_flag.set()
-            logs.append(f"Producer {self.name} stopped")
-
-    # Consumidor
-    class Consumer(threading.Thread):
-        def __init__(self, name, priority):
-            super().__init__(name=name)
-            self.priority = priority
-        def run(self):
-            logs.append(f"Consumer {self.name} started")
-            while not exit_flag.is_set():
-                time.sleep(self.priority / 10 if self.priority else variation * random.random())
-                try:
-                    q.get(timeout=1)
-                    logs.append(f"Consumer {self.name} dequeued → size={q.qsize()}")
-                except queue.Empty:
-                    # cola vacía: gana consumidor
-                    logs.append("Consumer wins (queue empty)")
-                    exit_flag.set()
-            logs.append(f"Consumer {self.name} stopped")
-
-    # Configuramos e iniciamos los hilos
-    p = Producer("P1", prod_prio)
-    c = Consumer("C1", cons_prio)
-    p.start(); c.start()
-
-    # Esperamos a que uno gane
-    p.join(); c.join()
-
-    logs.append("Simulation finished")
+    logs.append("Simulation ended")
     return logs
