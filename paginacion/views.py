@@ -1,4 +1,4 @@
-# paginacion/views.py
+
 
 from django.shortcuts import render
 from algoritmos.fifo import fifo
@@ -19,7 +19,7 @@ def index(request):
         else:  # LRU
             resultado = lru(data)
 
-        # ←── Aquí renombramos la clave 'hit-ratio' a 'hit_ratio' ──→
+
         if resultado and 'hit-ratio' in resultado:
             resultado['hit_ratio'] = resultado.pop('hit-ratio')
 

@@ -1,10 +1,5 @@
-# algoritmos/dining.py
 
 def simulate_dining(num_philosophers, iterations=1):
-    """
-    Simula de forma secuencial el algoritmo de Cena de los Filósofos.
-    Devuelve una lista de cadenas con el log paso a paso.
-    """
     LEFT = lambda i: (i - 1 + num_philosophers) % num_philosophers
     RIGHT = lambda i: (i + 1) % num_philosophers
 

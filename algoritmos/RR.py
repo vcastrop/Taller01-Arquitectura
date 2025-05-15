@@ -1,12 +1,6 @@
 from queue import Queue
 
 def rr(data, tq):
-    """
-    Round Robin scheduling.
-    data: lista de dicts con 'no','at','bt';
-    tq: time quantum
-    Devuelve { 'table': [...], 'gantt': [...] }
-    """
     # hacemos copia para no mutar el original
     process = { 'table': [dict(p) for p in data], 'gantt': [] }
     Q    = Queue()

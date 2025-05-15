@@ -1,11 +1,6 @@
 from operator import itemgetter
 
 def fcfs(data):
-    """
-    First-Come, First-Served scheduling.
-    data: list of dicts con 'no','at','bt'
-    Devuelve { 'table': [...], 'gantt': [...] }
-    """
     process = {}
     process['table'] = sorted(data, key=itemgetter('at'))
     process['gantt'] = []

@@ -4,7 +4,7 @@ from . import views
 app_name = 'sync'
 
 urlpatterns = [
-    # Menú principal de sincronización
+
 
     path('', views.index, name='index'),
     path('dining/',          views.dining_philosophers,                 name='dining'),

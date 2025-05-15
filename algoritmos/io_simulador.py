@@ -1,4 +1,4 @@
-# algoritmos/io_simulador.py
+
 import threading
 import time
 import random

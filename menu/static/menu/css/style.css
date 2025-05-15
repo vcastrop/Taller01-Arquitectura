@@ -1,4 +1,4 @@
-/* contenedor general */
+
 .menu-container {
   max-width: 900px;
   margin: 2rem auto;
@@ -10,7 +10,7 @@
   letter-spacing: 1px;
 }
 
-/* grid responsiva */
+
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -19,7 +19,7 @@
   margin-top: 2rem;
 }
 
-/* cada card */
+
 .menu-card {
   text-decoration: none;
   color: inherit;
@@ -33,7 +33,7 @@
 - border: 3px solid #fff;
 - border-radius: 60%;
 + border: 3px solid #333;
-+ border-radius: 8px;    /* esquinas redondeadas o pon 0 para esquinas totalmente rectas */
++ border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,7 +56,7 @@
   font-weight: 500;
 }
 
-/* hover */
+
 .menu-card:hover .menu-icon {
   transform: scale(1.1);
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);

@@ -1,4 +1,4 @@
-# processes/views.py
+
 
 from django.shortcuts import render
 from algoritmos.fcfs import fcfs
@@ -8,7 +8,7 @@ def index(request):
     results = gantt = avg_wt = avg_tat = None
 
     if request.method == 'POST':
-        # 1) Recojo procesos de los campos at_1, bt_1, at_2, bt_2, …
+
         data = []
         count = int(request.POST.get('count', 0))
         for i in range(1, count+1):
@@ -17,7 +17,7 @@ def index(request):
             if at and bt:
                 data.append({'no': i, 'at': int(at), 'bt': int(bt)})
 
-        # 2) Aquí es donde debes insertar ese código:
+
         algo = request.POST['algorithm']
         if algo == 'RR':
             # Si eligió Round Robin, tomo el quantum
@@ -26,7 +26,7 @@ def index(request):
             # Para FCFS u otros, no hace falta quantum
             tq = None
 
-        # 3) Llamo al algoritmo correspondiente
+
         if algo == 'RR':
             # guardo el burst original para cálculo de WT
             for p in data:
@@ -37,10 +37,10 @@ def index(request):
 
 
 
-        # 4) Preparo resultados para la plantilla
+
         results = proc['table']
         gantt   = proc['gantt']
-        # escala de píxeles por unidad de tiempo
+
         SCALE = 20
 
         for seg in gantt:

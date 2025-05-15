@@ -1,7 +1,7 @@
 <form method="post" action=".">
   {% csrf_token %}
 
-  <!-- Tabla de procesos existente -->
+
   <table id="process-table">
     <thead>
       <tr>
@@ -11,7 +11,7 @@
       </tr>
     </thead>
     <tbody>
-      <!-- Aquí irán las filas agregadas dinámicamente -->
+
       <tr>
         <td>1</td>
         <td><input type="number" name="at_1" min="0" required></td>
@@ -24,14 +24,14 @@
 
 <input type="hidden" name="count" id="count" value="1">
 
-  <!-- Selector de algoritmo -->
+
   <label for="algorithm">Elige algoritmo:</label>
   <select name="algorithm" id="algorithm">
     <option value="FCFS">First Come First Serve (FCFS)</option>
     <option value="RR">Round Robin (RR)</option>
   </select>
 
-  <!-- Campo de quantum, oculto por defecto -->
+
   <div id="quantum-field" style="display: none;">
     <label for="quantum">Quantum:</label>
     <input type="number" name="quantum" id="quantum" min="1" value="1">
@@ -44,14 +44,14 @@
   <h2>Resultados</h2>
   <p>AVG WT: {{ avg_wt }} AVG TAT: {{ avg_tat }}</p>
 
-  <!-- Diagrama de Gantt simple -->
+
   <div class="gantt-seg"
      style="left:{{ seg.left }}px; width:{{ seg.width }}px">
   {% if seg.no > 0 %}P{{ seg.no }}{% endif %}
 </div>
 
 
-  <!-- Tabla de resultados -->
+
   <table>
     <thead>
       <tr>

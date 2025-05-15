@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # Apps estándar de Django
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Tus apps
+
     'menu',
     'processes',
     'sync',
@@ -51,7 +51,7 @@ INSTALLED_APPS = [
 
 
 
-# Directorios de archivos estáticos
+
 STATICFILES_DIRS = [ BASE_DIR / 'menu' / 'static' ]
 
 MIDDLEWARE = [
@@ -82,7 +82,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',  # requerido por admin y nav sidebar
                 'django.contrib.auth.context_processors.auth',  # requerido por admin
                 'django.contrib.messages.context_processors.messages',  # requerido por admin
-                # otros procesadores por defecto si los tienes
+
             ],
         },
     },
