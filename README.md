@@ -16,3 +16,10 @@ Simulador de componentes de Sistemas Operativos (Disk Scheduling, I/O, Memoria/P
    ```bash
    git clone https://github.com/tu_usuario/OS_simulator.git
    cd OS_simulator
+2. **Crea y activa un entorno virtual**
+3. **instala dependencias**
+4. **Arranca el servidor**
+   ```bash
+   python manage.py runserver
+6. **Abre tu navegador**
+  Visita http://localhost:8000/ para acceder al menú principal
