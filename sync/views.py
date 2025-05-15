@@ -43,3 +43,10 @@ def producer_consumer(request):
         'variation': variation,
         'logs': logs,
     })
+
+
+def index(request):
+    """
+    Menú de sincronización: enlaces a prodcon y dining.
+    """
+    return render(request, 'sync/index.html')

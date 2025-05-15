@@ -2,14 +2,15 @@
 {% load static %}
 
 {% block head %}
-  <link rel="stylesheet" href="{% static 'sync/MYcss/style.css' %}">
+  {# Si quieres, añade CSS propio para este sub-menú #}
+  <link rel="stylesheet" href="{% static 'sync/css/style.css' %}">
 {% endblock %}
 
 {% block content %}
   <h2>Synchronization Module</h2>
   <div class="sync-menu">
     <a href="{% url 'sync:prodcon' %}" class="sync-card">
-      <div class="sync-icon">IO</div>
+      <div class="sync-icon">PC</div>
       <div class="sync-label">Producer-Consumer</div>
     </a>
     <a href="{% url 'sync:dining' %}" class="sync-card">
@@ -18,4 +19,3 @@
     </a>
   </div>
 {% endblock %}
->

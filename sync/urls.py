@@ -5,6 +5,8 @@ app_name = 'sync'
 
 urlpatterns = [
     # Menú principal de sincronización
-    path('',          views.dining_philosophers,                 name='index'),
+
+    path('', views.index, name='index'),
+    path('dining/',          views.dining_philosophers,                 name='dining'),
     path('prodcon/', views.producer_consumer, name='prodcon'),
 ]
