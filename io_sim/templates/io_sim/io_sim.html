@@ -44,73 +44,88 @@
   </div>
 
   <script>
-    let empleados = [];
+  let empleados = [];
 
-    function addToQueue() {
-      const id = document.getElementById("idInput").value.trim();
-      const duracion = parseFloat(document.getElementById("durationInput").value);
+  function addToQueue() {
+    const id = document.getElementById("idInput").value.trim();
+    const duracion = parseFloat(document.getElementById("durationInput").value);
 
-      if (!id || isNaN(duracion) || duracion <= 0) {
-        alert("Please enter a valid ID and duration > 0");
-        return;
-      }
-
-      empleados.push({ id, duracion });
-
-      const card = document.createElement("div");
-      card.className = "bg-indigo-100 text-indigo-800 px-4 py-2 rounded shadow text-sm font-medium";
-      card.textContent = `ID: ${id} | Duration: ${duracion}s`;
-      card.id = `card-${id}`;
-      document.getElementById("queue").appendChild(card);
-
-      document.getElementById("idInput").value = "";
-      document.getElementById("durationInput").value = "";
-
-      document.getElementById("simulateBtn").disabled = false;
+    if (!id || isNaN(duracion) || duracion <= 0) {
+      alert("Please enter a valid ID and duration > 0");
+      return;
     }
 
-    async function procesarCola() {
-      const printer = document.getElementById("printer");
-      const log = document.getElementById("log");
-      const simulateBtn = document.getElementById("simulateBtn");
+    empleados.push({ id, duracion });
 
-      simulateBtn.disabled = true;
+    const card = document.createElement("div");
+    card.className = "bg-indigo-100 text-indigo-800 px-4 py-2 rounded shadow text-sm font-medium";
+    card.textContent = `ID: ${id} | Duration: ${duracion}s`;
+    card.id = `card-${id}`;
+    document.getElementById("queue").appendChild(card);
 
-      for (let i = 0; i < empleados.length; i++) {
-        const emp = empleados[i];
-        const card = document.getElementById(`card-${emp.id}`);
+    document.getElementById("idInput").value = "";
+    document.getElementById("durationInput").value = "";
 
-        // Fase de espera
-        log.innerHTML += `<li>${emp.id} is preparing document (waiting)</li>`;
-        log.scrollTop = log.scrollHeight;
-        await new Promise(res => setTimeout(res, 1000));
+    document.getElementById("simulateBtn").disabled = false;
+  }
 
-        // Fase crítica
-        log.innerHTML += `<li>${emp.id} is waiting for the printer (critical section)</li>`;
-        log.scrollTop = log.scrollHeight;
-        await new Promise(res => setTimeout(res, 1000));
+  async function procesarCola() {
+    const printer = document.getElementById("printer");
+    const log = document.getElementById("log");
+    const simulateBtn = document.getElementById("simulateBtn");
 
-        // Fase protegida
-        printer.textContent = `Printing: ${emp.id}`;
-        printer.classList.add("bg-yellow-100", "text-yellow-700");
-        card.classList.remove("bg-indigo-100");
-        card.classList.add("bg-yellow-200", "text-yellow-800");
-        log.innerHTML += `<li>${emp.id} is printing (protected section) for ${emp.duracion}s</li>`;
-        log.scrollTop = log.scrollHeight;
-        await new Promise(res => setTimeout(res, emp.duracion * 1000));
+    simulateBtn.disabled = true;
 
-        // Finaliza
-        printer.textContent = `Idle`;
-        printer.classList.remove("bg-yellow-100", "text-yellow-700");
-        card.classList.remove("bg-yellow-200", "text-yellow-800");
-        card.classList.add("bg-green-100", "text-green-800");
-        card.textContent = `✅ ${emp.id} | Done`;
-        log.innerHTML += `<li>${emp.id} finished printing</li>`;
-        log.scrollTop = log.scrollHeight;
+    // 🔵 Fase de espera para todos
+    for (const emp of empleados) {
+      const card = document.getElementById(`card-${emp.id}`);
+      card.classList.remove("bg-indigo-100");
+      card.classList.add("bg-blue-100", "text-blue-800");
+      log.innerHTML += `<li>${emp.id} is preparing document (waiting)</li>`;
+      log.scrollTop = log.scrollHeight;
+    }
+
+    await new Promise(res => setTimeout(res, 1500));
+
+    // 🟡 Empieza impresión uno por uno
+    for (let i = 0; i < empleados.length; i++) {
+      const emp = empleados[i];
+      const card = document.getElementById(`card-${emp.id}`);
+
+      // El que va a imprimir
+      printer.textContent = `Printing: ${emp.id}`;
+      printer.classList.add("bg-yellow-100", "text-yellow-700");
+      card.classList.remove("bg-blue-100", "text-blue-800");
+      card.classList.add("bg-orange-100", "text-orange-800");
+      log.innerHTML += `<li>${emp.id} is printing (protected section) for ${emp.duracion}s</li>`;
+      log.scrollTop = log.scrollHeight;
+
+      // Los demás esperan en la cola
+      for (let j = 0; j < empleados.length; j++) {
+        if (j !== i) {
+          const other = document.getElementById(`card-${empleados[j].id}`);
+          if (!other.classList.contains("bg-green-100")) {
+            other.classList.remove("bg-orange-100", "bg-blue-100");
+            other.classList.add("bg-yellow-50", "text-yellow-700");
+            log.innerHTML += `<li>${empleados[j].id} is waiting for the printer (critical section)</li>`;
+          }
+        }
       }
 
-      empleados = [];
+      await new Promise(res => setTimeout(res, emp.duracion * 1000));
+
+      // ✅ Finaliza
+      printer.textContent = `Idle`;
+      printer.classList.remove("bg-yellow-100", "text-yellow-700");
+      card.classList.remove("bg-orange-100", "text-orange-800");
+      card.classList.add("bg-green-100", "text-green-800");
+      card.textContent = `✅ ${emp.id} | Done`;
+      log.innerHTML += `<li>${emp.id} finished printing</li>`;
+      log.scrollTop = log.scrollHeight;
     }
-  </script>
+
+    empleados = [];
+  }
+</script>
 </body>
 </html>
