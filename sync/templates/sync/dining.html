@@ -11,6 +11,7 @@
     background: white;
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-bottom: 40px;
   }
 
   form {
@@ -54,18 +55,45 @@
     color: #333;
   }
 
-  pre {
-    background: #f4f4f4;
-    padding: 20px;
+  .circle-sim {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background-color: #e0d1b2;
+  }
+
+  .philosopher, .fork {
+    position: absolute;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 50%;
+    border: 1px solid #000;
+  }
+
+  .philosopher {
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    background-color: #ddd;
+  }
+
+  .fork {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #ccc;
+  }
+
+  .status {
     margin-top: 30px;
-    border-radius: 8px;
-    white-space: pre-wrap;
+    text-align: center;
   }
 </style>
 
 <div class="form-container">
   <h2>Dining Philosophers Simulation</h2>
-
   <form method="post">
     {% csrf_token %}
     <label>
@@ -78,14 +106,89 @@
     </label>
     <button type="submit">Run</button>
   </form>
-
-  {% if logs %}
-    <h3>Output:</h3>
-    <pre>
-{% for line in logs %}
-{{ line }}
-{% endfor %}
-    </pre>
-  {% endif %}
 </div>
+
+{% if logs %}
+  <div class="status">
+    <h3>Output:</h3>
+    <div class="circle-sim" id="circle-sim">
+      <!-- Los filósofos y tenedores se generan con JS -->
+    </div>
+    <button onclick="nextStep()" style="margin-top: 20px;">Next</button>
+  </div>
+
+  <script>
+    const n = {{ n }};
+    let currentStep = 0;
+    const logs = {{ logs|safe }};
+    const container = document.getElementById("circle-sim");
+
+    const radius = 200;
+    const centerX = 250;
+    const centerY = 250;
+
+    const philosophers = [];
+    const forks = [];
+
+    function createCircle() {
+      for (let i = 0; i < n; i++) {
+        const angle = (2 * Math.PI / n) * i;
+        const x = centerX + radius * Math.cos(angle) - 40;
+        const y = centerY + radius * Math.sin(angle) - 40;
+
+        const p = document.createElement("div");
+        p.className = "philosopher";
+        p.id = "phil" + i;
+        p.textContent = "P" + i;
+        p.style.left = x + "px";
+        p.style.top = y + "px";
+        container.appendChild(p);
+
+        const fx = centerX + (radius - 60) * Math.cos(angle + Math.PI / n) - 15;
+        const fy = centerY + (radius - 60) * Math.sin(angle + Math.PI / n) - 15;
+
+        const f = document.createElement("div");
+        f.className = "fork";
+        f.id = "fork" + i;
+        f.textContent = "F" + i;
+        f.style.left = fx + "px";
+        f.style.top = fy + "px";
+        container.appendChild(f);
+      }
+    }
+
+    function resetColors() {
+      for (let i = 0; i < n; i++) {
+        document.getElementById("phil" + i).style.backgroundColor = "#ddd";
+        document.getElementById("fork" + i).style.backgroundColor = "#ccc";
+      }
+    }
+
+    function nextStep() {
+      if (currentStep >= logs.length) return;
+
+      const line = logs[currentStep];
+      const eatingMatch = line.match(/Philosopher (\d+) .*eating/);
+      const hungryMatch = line.match(/Philosopher (\d+) is hungry/);
+      const thinkingMatch = line.match(/Philosopher (\d+) is thinking/);
+
+      if (eatingMatch) {
+        const i = parseInt(eatingMatch[1]);
+        document.getElementById("phil" + i).style.backgroundColor = "#ff0000";
+        document.getElementById("fork" + i).style.backgroundColor = "#ff0000";
+        document.getElementById("fork" + ((i + 1) % n)).style.backgroundColor = "#ff0000";
+      } else if (hungryMatch) {
+        const i = parseInt(hungryMatch[1]);
+        document.getElementById("phil" + i).style.backgroundColor = "#ffff00";
+      } else if (thinkingMatch) {
+        const i = parseInt(thinkingMatch[1]);
+        document.getElementById("phil" + i).style.backgroundColor = "#ccc";
+      }
+
+      currentStep++;
+    }
+
+    createCircle();
+  </script>
+{% endif %}
 {% endblock %}

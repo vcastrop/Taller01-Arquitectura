@@ -2,8 +2,8 @@ from django.shortcuts import render
 from algoritmos.dining import simulate_dining
 from algoritmos.producer_consumer import simulate_pc_sync as simulate_pc
 
+
 def dining_philosophers(request):
-    # valores por defecto
     n = 5
     iterations = 1
     logs = None
@@ -18,6 +18,7 @@ def dining_philosophers(request):
         'iterations': iterations,
         'logs': logs,
     })
+
 
 def producer_consumer(request):
     # valores por defecto
