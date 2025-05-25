@@ -1,21 +1,81 @@
 {% block content %}
-  <h2>Producer‐Consumer Simulation</h2>
+<style>
+  .form-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
 
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+  }
+
+  label {
+    flex: 1 1 45%;
+    font-weight: 600;
+    color: #444;
+  }
+
+  input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-top: 4px;
+  }
+
+  button {
+    background-color: #4f46e5;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+  }
+
+  button:hover {
+    background-color: #4338ca;
+  }
+
+  h2, h3 {
+    text-align: center;
+    color: #333;
+  }
+
+  pre {
+    background: #f4f4f4;
+    padding: 20px;
+    margin-top: 30px;
+    border-radius: 8px;
+    white-space: pre-wrap;
+  }
+</style>
+
+<div class="form-container">
+  <h2>Producer‐Consumer Simulation</h2>
   <form method="post">
     {% csrf_token %}
     <label>
       Queue size:
       <input type="number" name="size" value="{{ size }}" min="2">
     </label>
-    <label style="margin-left:1em;">
+    <label>
       Producer priority:
       <input type="number" step="0.1" name="prod_prio" value="{{ prod_prio }}" min="0">
     </label>
-    <label style="margin-left:1em;">
+    <label>
       Consumer priority:
       <input type="number" step="0.1" name="cons_prio" value="{{ cons_prio }}" min="0">
     </label>
-    <label style="margin-left:1em;">
+    <label>
       Variation:
       <input type="number" step="0.1" name="variation" value="{{ variation }}" min="0">
     </label>
@@ -24,10 +84,11 @@
 
   {% if logs %}
     <h3>Output:</h3>
-    <pre style="background:#f4f4f4; padding:1em; white-space: pre-wrap;">
+    <pre>
 {% for line in logs %}
 {{ line }}
 {% endfor %}
     </pre>
   {% endif %}
+</div>
 {% endblock %}

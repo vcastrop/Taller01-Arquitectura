@@ -1,7 +1,50 @@
 {% load static %}
 
 {% block head %}
-  <link rel="stylesheet" href="{% static 'sync/css/style.css' %}">
+  <style>
+    .sync-menu {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    .sync-card {
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 220px;
+      text-align: center;
+      text-decoration: none;
+      color: #4f46e5;
+      transition: transform 0.2s, box-shadow 0.2s;
+      padding: 30px 20px;
+    }
+
+    .sync-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+      background-color: #f9f9ff;
+    }
+
+    .sync-icon {
+      font-size: 48px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .sync-label {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 40px;
+      color: #333;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}

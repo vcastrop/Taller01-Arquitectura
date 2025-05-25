@@ -5,8 +5,21 @@
   <meta charset="UTF-8">
   <title>OS Simulator</title>
   <link rel="stylesheet" href="{% static 'menu/css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'sync/MYcss/dining.css' %}">
+  <link rel="stylesheet" href="{% static 'sync/MYcss/dining.css' %}">
+  {% block head %}{% endblock %}
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
 
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
   <header>

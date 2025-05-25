@@ -1,4 +1,65 @@
 {% block content %}
+<style>
+  .form-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+  }
+
+  label {
+    flex: 1 1 45%;
+    font-weight: 600;
+    color: #444;
+  }
+
+  input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-top: 4px;
+  }
+
+  button {
+    background-color: #4f46e5;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+  }
+
+  button:hover {
+    background-color: #4338ca;
+  }
+
+  h2, h3 {
+    text-align: center;
+    color: #333;
+  }
+
+  pre {
+    background: #f4f4f4;
+    padding: 20px;
+    margin-top: 30px;
+    border-radius: 8px;
+    white-space: pre-wrap;
+  }
+</style>
+
+<div class="form-container">
   <h2>Dining Philosophers Simulation</h2>
 
   <form method="post">
@@ -7,7 +68,7 @@
       Number of philosophers:
       <input type="number" name="n" value="{{ n }}" min="2" max="20">
     </label>
-    <label style="margin-left:1em;">
+    <label>
       Iterations:
       <input type="number" name="iterations" value="{{ iterations }}" min="1">
     </label>
@@ -16,10 +77,11 @@
 
   {% if logs %}
     <h3>Output:</h3>
-    <pre style="background:#f4f4f4; padding:1em; white-space: pre-wrap;">
+    <pre>
 {% for line in logs %}
 {{ line }}
 {% endfor %}
     </pre>
   {% endif %}
+</div>
 {% endblock %}
