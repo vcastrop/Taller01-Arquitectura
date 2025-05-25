@@ -28,7 +28,7 @@ def disk_view(request):
             order, total = [], 0
 
         # Crear gráfica tipo "línea de cilindros"
-        fig, ax = plt.subplots(figsize=(10, 5))
+        fig, ax = plt.subplots(figsize=(12, 6))
         x = order
         y = list(range(len(order)))
 
