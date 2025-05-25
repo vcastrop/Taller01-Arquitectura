@@ -13,7 +13,6 @@ def index(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         duracion = request.POST.get('duracion')
-        prioridad = request.POST.get('prioridad')
         accion = request.POST.get('action')
 
         if nombre and duracion and prioridad:
@@ -27,8 +26,7 @@ def index(request):
             elif accion == 'simulate':
                 cola_global.append(solicitud)
                 cola_backup = cola_global[:]
-                cola_ordenada = sorted(cola_backup, key=lambda x: x['prioridad'])
-                resultado = simular_empleados_con_impresora(cola_ordenada)
+                resultado = simular_empleados_con_impresora(cola_backup)
                 cola_global = []
 
     return render(request, 'io_sim/io_sim.html', {
