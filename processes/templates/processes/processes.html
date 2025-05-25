@@ -1,7 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Planificador de Procesos</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 40px;
+      background-color: #f4f7f8;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      background-color: white;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background-color: #3498db;
+      color: white;
+    }
+
+    input[type="number"] {
+      width: 80px;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    select, button {
+      padding: 8px 12px;
+      margin: 10px 0;
+      border-radius: 4px;
+      border: none;
+    }
+
+    select {
+      border: 1px solid #ccc;
+      background-color: #fff;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    #quantum-field {
+      margin-top: 10px;
+    }
+
+    .gantt-seg {
+      display: inline-block;
+      height: 30px;
+      background-color: #2ecc71;
+      margin: 5px;
+      text-align: center;
+      line-height: 30px;
+      color: white;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
 <form method="post" action=".">
   {% csrf_token %}
-
-
   <table id="process-table">
     <thead>
       <tr>
@@ -11,7 +92,6 @@
       </tr>
     </thead>
     <tbody>
-
       <tr>
         <td>1</td>
         <td><input type="number" name="at_1" min="0" required></td>
@@ -19,11 +99,12 @@
       </tr>
     </tbody>
   </table>
+
   <button type="button" id="add-row">Añadir Proceso</button>
 
+  <input type="hidden" name="count" id="count" value="1">
 
-<input type="hidden" name="count" id="count" value="1">
-
+  <br>
 
   <label for="algorithm">Elige algoritmo:</label>
   <select name="algorithm" id="algorithm">
@@ -31,12 +112,12 @@
     <option value="RR">Round Robin (RR)</option>
   </select>
 
-
   <div id="quantum-field" style="display: none;">
     <label for="quantum">Quantum:</label>
     <input type="number" name="quantum" id="quantum" min="1" value="1">
   </div>
 
+  <br>
   <button type="submit">Simular</button>
 </form>
 
@@ -44,13 +125,13 @@
   <h2>Resultados</h2>
   <p>AVG WT: {{ avg_wt }} AVG TAT: {{ avg_tat }}</p>
 
-
-  <div class="gantt-seg"
-     style="left:{{ seg.left }}px; width:{{ seg.width }}px">
-  {% if seg.no > 0 %}P{{ seg.no }}{% endif %}
-</div>
-
-
+  <div>
+    {% for seg in gantt %}
+      <div class="gantt-seg" style="left:{{ seg.left }}px; width:{{ seg.width }}px">
+        {% if seg.no > 0 %}P{{ seg.no }}{% endif %}
+      </div>
+    {% endfor %}
+  </div>
 
   <table>
     <thead>
@@ -89,7 +170,17 @@
     tbody.appendChild(tr);
     countField.value = next;
   });
+
+  const algoSelect = document.getElementById('algorithm');
+  const quantumField = document.getElementById('quantum-field');
+
+  algoSelect.addEventListener('change', () => {
+    quantumField.style.display = algoSelect.value === 'RR' ? 'block' : 'none';
+  });
 </script>
+
+</body>
+</html>
 
 
 
