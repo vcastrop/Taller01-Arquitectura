@@ -35,7 +35,7 @@
     <!-- Zona de impresora -->
     <h2 class="text-lg font-semibold text-gray-700 mb-2">Printer:</h2>
     <div id="printer" class="w-full h-32 flex items-center justify-center border-4 border-dashed border-indigo-400 rounded-lg text-xl text-gray-600 mb-6">
-      Idle 🖨️
+      Idle
     </div>
 
     <!-- Log -->
@@ -59,7 +59,7 @@
 
       const card = document.createElement("div");
       card.className = "bg-indigo-100 text-indigo-800 px-4 py-2 rounded shadow text-sm font-medium";
-      card.textContent = `🧍 ${id}`;
+      card.textContent = `ID: ${id} | Duration: ${duracion}s`;
       card.id = `card-${id}`;
       document.getElementById("queue").appendChild(card);
 
@@ -80,23 +80,31 @@
         const emp = empleados[i];
         const card = document.getElementById(`card-${emp.id}`);
 
-        printer.textContent = `🖨️ Printing: ${emp.id}`;
-        printer.classList.add("bg-yellow-100", "text-yellow-700");
+        // Fase de espera
+        log.innerHTML += `<li>${emp.id} is preparing document (waiting)</li>`;
+        log.scrollTop = log.scrollHeight;
+        await new Promise(res => setTimeout(res, 1000));
 
+        // Fase crítica
+        log.innerHTML += `<li>${emp.id} is waiting for the printer (critical section)</li>`;
+        log.scrollTop = log.scrollHeight;
+        await new Promise(res => setTimeout(res, 1000));
+
+        // Fase protegida
+        printer.textContent = `Printing: ${emp.id}`;
+        printer.classList.add("bg-yellow-100", "text-yellow-700");
         card.classList.remove("bg-indigo-100");
         card.classList.add("bg-yellow-200", "text-yellow-800");
-
-        log.innerHTML += `<li>${emp.id} is printing for ${emp.duracion}s</li>`;
+        log.innerHTML += `<li>${emp.id} is printing (protected section) for ${emp.duracion}s</li>`;
         log.scrollTop = log.scrollHeight;
-
         await new Promise(res => setTimeout(res, emp.duracion * 1000));
 
-        printer.textContent = `Idle 🖨️`;
+        // Finaliza
+        printer.textContent = `Idle`;
         printer.classList.remove("bg-yellow-100", "text-yellow-700");
-
         card.classList.remove("bg-yellow-200", "text-yellow-800");
         card.classList.add("bg-green-100", "text-green-800");
-        card.textContent = `✅ ${emp.id}`;
+        card.textContent = `✅ ${emp.id} | Done`;
         log.innerHTML += `<li>${emp.id} finished printing</li>`;
         log.scrollTop = log.scrollHeight;
       }
