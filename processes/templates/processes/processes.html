@@ -100,13 +100,13 @@
     </tbody>
   </table>
 
-  <button type="button" id="add-row">Añadir Proceso</button>
+  <button type="button" id="add-row">Add process</button>
 
   <input type="hidden" name="count" id="count" value="1">
 
   <br>
 
-  <label for="algorithm">Elige algoritmo:</label>
+  <label for="algorithm">Choose algorithm:</label>
   <select name="algorithm" id="algorithm">
     <option value="FCFS">First Come First Serve (FCFS)</option>
     <option value="RR">Round Robin (RR)</option>
@@ -118,11 +118,11 @@
   </div>
 
   <br>
-  <button type="submit">Simular</button>
+  <button type="submit">Simulate</button>
 </form>
 
 {% if results %}
-  <h2>Resultados</h2>
+  <h2>Results</h2>
   <p>AVG WT: {{ avg_wt }} AVG TAT: {{ avg_tat }}</p>
 
   <div>
