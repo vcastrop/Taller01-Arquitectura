@@ -1,98 +1,112 @@
-{% block content %}
-<style>
-  * {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Producer-Consumer Simulation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+<div class="bg-white shadow-xl rounded-2xl p-8 max-w-6xl w-full">
+    <h2 class="text-2xl font-bold text-center mb-6 text-indigo-700">Producer-Consumer Semaphore Simulation</h2>
 
-  .form-container {
-    max-width: 700px;
-    margin: 40px auto;
-    padding: 30px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  }
+    <!-- Buffer visual -->
+    <div class="flex justify-center gap-4 mb-8">
+        <button id="one" class="w-20 h-20 border rounded-md bg-white"></button>
+        <button id="two" class="w-20 h-20 border rounded-md bg-white"></button>
+        <button id="three" class="w-20 h-20 border rounded-md bg-white"></button>
+        <button id="four" class="w-20 h-20 border rounded-md bg-white"></button>
+        <button id="five" class="w-20 h-20 border rounded-md bg-white"></button>
+        <button id="six" class="w-20 h-20 border rounded-md bg-white"></button>
+        <button id="seven" class="w-20 h-20 border rounded-md bg-white"></button>
+    </div>
 
-  form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    align-items: center;
-  }
+    <!-- Botones de acción -->
+    <div class="flex justify-center gap-10 mb-6">
+        <button id="prod" onclick="produce()" class="bg-indigo-600 text-white px-6 py-4 rounded-lg text-lg hover:bg-indigo-700">Produce</button>
+        <button id="con" onclick="consume()" class="bg-indigo-600 text-white px-6 py-4 rounded-lg text-lg hover:bg-indigo-700">Consume</button>
+    </div>
 
-  label {
-    flex: 1 1 45%;
-    font-weight: 600;
-    color: #444;
-  }
+    <!-- Contadores -->
+    <div class="flex justify-center gap-10 mb-6">
+        <div id="buffer-size" class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded font-semibold">BUFFER_SIZE = 7</div>
+        <div id="count" class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded font-semibold">counter = 0</div>
+    </div>
 
-  input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    margin-top: 4px;
-  }
+    <!-- Código fuente -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <textarea disabled class="w-full h-60 p-4 border-2 border-orange-400 bg-white text-sm">
+while(1)
+{
+    /* produce an item in next_produced */
 
-  button {
-    background-color: #4f46e5;
-    color: white;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 20px;
-  }
+    while (counter==BUFFER_SIZE)
+        ; /* do nothing */
 
-  button:hover {
-    background-color: #4338ca;
-  }
+    buffer[in] = next_produced;
+    in = (in + 1) % BUFFER_SIZE;
+    counter++;
+}
+        </textarea>
 
-  h2, h3 {
-    text-align: center;
-    color: #333;
-  }
+        <textarea disabled class="w-full h-60 p-4 border-2 border-orange-400 bg-white text-sm">
+while(1)
+{
+    while(counter == 0)
+        ; /* do nothing */
 
-  pre {
-    background: #f4f4f4;
-    padding: 20px;
-    margin-top: 30px;
-    border-radius: 8px;
-    white-space: pre-wrap;
-  }
-</style>
+    next_consumed = buffer[out];
+    out = (out+1) % BUFFER_SIZE;
+    counter--;
 
-<div class="form-container">
-  <h2>Producer‐Consumer Simulation</h2>
-  <form method="post">
-    {% csrf_token %}
-    <label>
-      Queue size:
-      <input type="number" name="size" value="{{ size }}" min="2">
-    </label>
-    <label>
-      Producer priority:
-      <input type="number" step="0.1" name="prod_prio" value="{{ prod_prio }}" min="0">
-    </label>
-    <label>
-      Consumer priority:
-      <input type="number" step="0.1" name="cons_prio" value="{{ cons_prio }}" min="0">
-    </label>
-    <label>
-      Variation:
-      <input type="number" step="0.1" name="variation" value="{{ variation }}" min="0">
-    </label>
-    <button type="submit">Run</button>
-  </form>
-
-  {% if logs %}
-    <h3>Output:</h3>
-    <pre>
-{% for line in logs %}
-{{ line }}
-{% endfor %}
-    </pre>
-  {% endif %}
+    /* consume an item in next_consumed */
+}
+        </textarea>
+    </div>
 </div>
-{% endblock %}
+
+<script>
+    var queue = [0,0,0,0,0,0,0]; var num=0;
+    var rear = -1; var front = -1;
+
+    function updateCounterDisplay() {
+        const count = rear === -1 ? 0 : rear - front + 1;
+        document.getElementById("count").innerHTML = "counter = " + count;
+    }
+
+    function updateColors() {
+        const ids = ["one", "two", "three", "four", "five", "six", "seven"];
+        for (let i = 0; i < queue.length; i++) {
+            document.getElementById(ids[i]).style.backgroundColor = queue[i] === 1 ? "#4f46e5" : "#FFFFFF";
+        }
+        document.getElementById("con").disabled = num <= 0;
+        document.getElementById("prod").disabled = num >= 7;
+    }
+
+    function produce() {
+        if (num >= 7) return;
+        num++;
+        if (front === -1 && rear === -1) {
+            front = rear = 0;
+        } else {
+            rear = (rear + 1) % 7;
+        }
+        queue[rear] = 1;
+        updateColors();
+        updateCounterDisplay();
+    }
+
+    function consume() {
+        if (num <= 0) return;
+        num--;
+        queue[front] = 0;
+        if (front === rear) {
+            front = rear = -1;
+        } else {
+            front = (front + 1) % 7;
+        }
+        updateColors();
+        updateCounterDisplay();
+    }
+</script>
+</body>
+</html>
