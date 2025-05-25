@@ -2,6 +2,91 @@
 {% load static %}
 
 {% block content %}
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f8;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+
+  h2, h3 {
+    text-align: center;
+    color: #333;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  label {
+    font-weight: 600;
+    color: #444;
+  }
+
+  input[type="number"],
+  input[type="text"],
+  select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  button {
+    padding: 10px;
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  button:hover {
+    background-color: #4338ca;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 25px;
+    background-color: white;
+    box-shadow: 0 0 6px rgba(0,0,0,0.1);
+  }
+
+  th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+
+  th {
+    background-color: #4f46e5;
+    color: white;
+  }
+
+  p {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 16px;
+    color: #444;
+  }
+</style>
+
+<div class="container">
   <h2>Page Replacement Simulator</h2>
 
   <form method="post">
@@ -25,29 +110,35 @@
   {% if resultado %}
     <h3>Resultados</h3>
     <p>
-  Hits: {{ resultado.hits }}
-  Misses: {{ resultado.miss }}
-  Hit ratio: {{ resultado.hit_ratio }}
-</p>
-
-
+      Hits: {{ resultado.hits }} |
+      Misses: {{ resultado.miss }} |
+      Hit ratio: {{ resultado.hit_ratio }}
+    </p>
 
     <table>
       <thead>
-        <tr><th>#</th><th>Status</th><th>Cache state</th>
-          {% if resultado.states.0.lru %}<th>LRU ages</th>{% endif %}
+        <tr>
+          <th>#</th>
+          <th>Status</th>
+          <th>Cache state</th>
+          {% if resultado.states.0.lru %}
+          <th>LRU ages</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody>
-      {% for s in resultado.states %}
+        {% for s in resultado.states %}
         <tr>
           <td>{{ forloop.counter }}</td>
           <td>{{ s.status }}</td>
           <td>{{ s.cache }}</td>
-          {% if s.lru %}<td>{{ s.lru }}</td>{% endif %}
+          {% if s.lru %}
+          <td>{{ s.lru }}</td>
+          {% endif %}
         </tr>
-      {% endfor %}
+        {% endfor %}
       </tbody>
     </table>
   {% endif %}
+</div>
 {% endblock %}
