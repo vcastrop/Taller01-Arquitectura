@@ -32,38 +32,6 @@
         <div id="count" class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded font-semibold">counter = 0</div>
     </div>
 
-    <!-- Código fuente -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <textarea disabled class="w-full h-60 p-4 border-2 border-orange-400 bg-white text-sm">
-while(1)
-{
-    /* produce an item in next_produced */
-
-    while (counter==BUFFER_SIZE)
-        ; /* do nothing */
-
-    buffer[in] = next_produced;
-    in = (in + 1) % BUFFER_SIZE;
-    counter++;
-}
-        </textarea>
-
-        <textarea disabled class="w-full h-60 p-4 border-2 border-orange-400 bg-white text-sm">
-while(1)
-{
-    while(counter == 0)
-        ; /* do nothing */
-
-    next_consumed = buffer[out];
-    out = (out+1) % BUFFER_SIZE;
-    counter--;
-
-    /* consume an item in next_consumed */
-}
-        </textarea>
-    </div>
-</div>
-
 <script>
     var queue = [0,0,0,0,0,0,0]; var num=0;
     var rear = -1; var front = -1;
