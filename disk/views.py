@@ -6,9 +6,18 @@ import base64
 from algoritmos.fcfs2 import fcfs2 as fcfs
 from algoritmos.sstf import sstf
 from algoritmos.scan import scan
+from .services import DiskSchedulerService
+from algoritmos.strategies import FCFSStrategy, SSTFStrategy, ScanStrategy
+
+scheduler = DiskSchedulerService({
+    "fcfs": FCFSStrategy(),
+    "sstf": SSTFStrategy(),
+    "scan": ScanStrategy(),
+})
 
 @csrf_exempt
 def disk_view(request):
+
     result = None
 
     if request.method == 'POST':
@@ -18,14 +27,7 @@ def disk_view(request):
         cylinders = int(request.POST['cylinders'])
         algorithm = request.POST['algorithm']
 
-        if algorithm == 'fcfs':
-            order, total = fcfs(current, requests)
-        elif algorithm == 'sstf':
-            order, total = sstf(current, requests)
-        elif algorithm == 'scan':
-            order, total = scan(current, previous, requests, cylinders)
-        else:
-            order, total = [], 0
+        order, total = scheduler.run(algorithm, current, previous, requests, cylinders)
 
         # Crear gráfica tipo "línea de cilindros"
         fig, ax = plt.subplots(figsize=(12, 6))

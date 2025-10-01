@@ -3,6 +3,7 @@ from algoritmos.dining import simulate_dining
 from algoritmos.producer_consumer import simulate_pc_sync as simulate_pc
 
 
+
 def dining_philosophers(request):
     n = 5
     iterations = 1
