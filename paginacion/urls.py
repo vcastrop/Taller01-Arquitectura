@@ -1,9 +1,9 @@
-
 from django.urls import path
-from . import views
+from .views import index, PaginacionView
 
-app_name = 'paginacion'
+app_name = "paginacion"
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', PaginacionView.as_view(), name='index'),
+    path('fbv/', index, name='index_fbv'),
 ]
