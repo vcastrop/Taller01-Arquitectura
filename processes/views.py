@@ -1,58 +1,61 @@
-
-
 from django.shortcuts import render
-from algoritmos.fcfs import fcfs
-from algoritmos.RR   import rr
+from algoritmos.factory import get_cpu_scheduler  # ← NUEVO: centraliza la selección de algoritmo
+
 
 def index(request):
     results = gantt = avg_wt = avg_tat = None
 
     if request.method == 'POST':
-
+        # --- armar los procesos desde el formulario ---
         data = []
-        count = int(request.POST.get('count', 0))
-        for i in range(1, count+1):
+        try:
+            count = int(request.POST.get('count', 0))
+        except (TypeError, ValueError):
+            count = 0
+
+        for i in range(1, count + 1):
             at = request.POST.get(f'at_{i}')
             bt = request.POST.get(f'bt_{i}')
-            if at and bt:
-                data.append({'no': i, 'at': int(at), 'bt': int(bt)})
+            if at not in (None, '') and bt not in (None, ''):
+                try:
+                    data.append({'no': i, 'at': int(at), 'bt': int(bt)})
+                except ValueError:
+                    # si un campo no es numérico, lo ignoramos; puedes mostrar un error en plantilla si prefieres
+                    pass
 
+        # --- elegir algoritmo mediante la Factory ---
+        alg_name = request.POST.get('algorithm', 'FCFS')  # soporta "FCFS"/"RR" (cualquier mayúsc/minúsc)
+        scheduler = get_cpu_scheduler(alg_name)
 
-        algo = request.POST['algorithm']
-        if algo == 'RR':
-            # Si eligió Round Robin, tomo el quantum
-            tq = int(request.POST['quantum'])
-        else:
-            # Para FCFS u otros, no hace falta quantum
-            tq = None
-
-
-        if algo == 'RR':
-            # guardo el burst original para cálculo de WT
+        # --- parámetros específicos (solo RR necesita quantum) ---
+        tq = None
+        if alg_name.upper() == 'RR':
+            quantum_str = request.POST.get('quantum', '')
+            if quantum_str != '':
+                tq = int(quantum_str)
+            # conservar burst original (tu lógica actual)
             for p in data:
                 p['original_bt'] = p['bt']
-            proc = rr(data, tq)
-        else:  # FCFS
-            proc = fcfs(data)
 
+        # --- ejecutar el algoritmo seleccionado ---
+        if tq is None:
+            proc = scheduler(data)          # FCFS (u otro que no requiera quantum)
+        else:
+            proc = scheduler(data, tq)      # RR
 
-
-
-        results = proc['table']
-        gantt   = proc['gantt']
+        # --- preparar datos para la vista ---
+        results = proc.get('table')
+        gantt   = proc.get('gantt')
 
         SCALE = 20
+        if gantt:
+            for seg in gantt:
+                seg['left'] = seg['start'] * SCALE
+                seg['width'] = (seg['stop'] - seg['start']) * SCALE
 
-        for seg in gantt:
-            seg['left'] = seg['start'] * SCALE
-            seg['width'] = (seg['stop'] - seg['start']) * SCALE
-
-        if results and len(results) > 0:
-            avg_wt = sum(p['wt'] for p in results) / len(results)
+        if results:
+            avg_wt  = sum(p['wt']  for p in results) / len(results)
             avg_tat = sum(p['tat'] for p in results) / len(results)
-        else:
-            avg_wt = avg_tat = None
-
 
     return render(request, 'processes/processes.html', {
         'results': results,
