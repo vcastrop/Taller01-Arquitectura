@@ -1,0 +1,284 @@
+{% load static %}
+{% block content %}
+
+<!-- ========== Estilos (inspirado en tu ejemplo) ========== -->
+<style>
+  :root {
+    --indigo: #4f46e5;
+    --indigo-dark: #4338ca;
+    --bg: #f4f7f8;
+    --text: #333;
+    --muted: #444;
+    --border: #ddd;
+    --card-shadow: 0 0 10px rgba(0,0,0,0.08);
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg);
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 40px auto;
+    background-color: #fff;
+    padding: 28px;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .title {
+    margin: 0;
+    color: var(--text);
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    margin: 2px 0 0;
+    color: #666;
+    font-size: 14px;
+  }
+
+  .btn-link {
+    display: inline-block;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--muted);
+    background: #fff;
+    transition: background-color .15s ease-in-out, border-color .15s ease-in-out;
+  }
+  .btn-link:hover { background: #fafafa; border-color: #cfcfcf; }
+
+  form {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr auto;
+    gap: 14px;
+    margin-top: 18px;
+  }
+
+  label {
+    font-weight: 600;
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .field { display: flex; flex-direction: column; }
+
+  input[type="number"],
+  input[type="text"] {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  .algos-box {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  .checks {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .checks label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-weight: 500; color: #333;
+  }
+
+  button[type="submit"] {
+    align-self: end;
+    padding: 10px 16px;
+    background-color: var(--indigo);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color .15s ease-in-out;
+    height: 42px;
+  }
+  button[type="submit"]:hover { background-color: var(--indigo-dark); }
+
+  .errors { margin-top: 6px; color: #c53030; font-size: 13px; }
+  .global-errors { margin: 10px 0; color: #b91c1c; font-weight: 600; }
+
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    padding: 16px;
+  }
+
+  .chart {
+    margin-top: 22px;
+    display: flex;
+    justify-content: center;
+  }
+  .chart img {
+    max-width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 18px;
+    background-color: white;
+    box-shadow: 0 0 6px rgba(0,0,0,0.06);
+  }
+
+  th, td {
+    padding: 10px;
+    border: 1px solid var(--border);
+    text-align: center;
+    font-size: 14px;
+  }
+
+  thead th {
+    background-color: var(--indigo);
+    color: white;
+    font-weight: 600;
+  }
+
+  tbody tr:hover { background-color: #fafbff; }
+
+  .muted { color: #666; font-size: 13px; }
+  .footer-note { margin-top: 16px; text-align: center; color: #666; font-size: 13px; }
+  @media (max-width: 900px) {
+    form { grid-template-columns: 1fr; }
+    button[type="submit"] { width: 100%; }
+  }
+</style>
+
+<div class="container">
+
+  <!-- Header / navegación -->
+  <div class="topbar">
+    <div>
+      <h1 class="title">Comparar algoritmos de paginación</h1>
+      <p class="subtitle">Ejecuta FIFO y/o LRU con el mismo input y compara métricas.</p>
+    </div>
+    <a class="btn-link" href="{% url 'paginacion:index' %}">← Volver a ejecutar uno</a>
+  </div>
+
+  <!-- Errores globales del form -->
+  {% if form and form.non_field_errors %}
+    <div class="global-errors">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <!-- Formulario -->
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    <!-- Tamaño -->
+    <div class="field">
+      <label for="id_size">Tamaño de marcos</label>
+      <input type="number" id="id_size" name="size" min="1"
+             value="{{ form.size.value|default_if_none:'' }}" required>
+      {% if form and form.size.errors %}
+        <div class="errors">{{ form.size.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Requests -->
+    <div class="field">
+      <label for="id_requests">Secuencia (coma o espacio)</label>
+      <input type="text" id="id_requests" name="requests"
+             placeholder="ej. 7, 0, 1, 2, 0, 3, 0, 4, 2"
+             value="{{ form.requests.value|default_if_none:'' }}" required>
+      {% if form and form.requests.errors %}
+        <div class="errors">{{ form.requests.errors.0 }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Algoritmos -->
+    <div class="field">
+      <label>Algoritmos a comparar</label>
+      <div class="algos-box">
+        <div class="checks">
+          {# Render manual para asegurar estilo consistente #}
+          {% with selected=form.algorithms.value %}
+            <label>
+              <input type="checkbox" name="algorithms" value="FIFO"
+                     {% if selected and "FIFO" in selected %}checked{% endif %}>
+              FIFO
+            </label>
+            <label>
+              <input type="checkbox" name="algorithms" value="LRU"
+                     {% if selected and "LRU" in selected %}checked{% endif %}>
+              LRU
+            </label>
+          {% endwith %}
+        </div>
+        {% if form and form.algorithms.errors %}
+          <div class="errors">{{ form.algorithms.errors.0 }}</div>
+        {% endif %}
+        <p class="muted" style="margin-top:8px;">Puedes seleccionar uno o ambos.</p>
+      </div>
+    </div>
+
+    <!-- Botón -->
+    <div class="field" style="align-items:flex-end;">
+      <button type="submit">Comparar</button>
+    </div>
+  </form>
+
+  <!-- Resultado -->
+  {% if comparison %}
+    <!-- Gráfico (opcional) -->
+    {% if chart_b64 %}
+      <div class="chart card">
+        <img src="data:image/png;base64,{{ chart_b64 }}" alt="Comparación de métricas">
+      </div>
+    {% endif %}
+
+    <!-- Tabla comparativa -->
+    <table>
+      <thead>
+        <tr>
+          <th>Algoritmo</th>
+          <th>Métrica</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in comparison %}
+          {% for metric in row.metrics %}
+            <tr>
+              {% if forloop.first %}
+                <td rowspan="{{ row.metrics|length }}" style="font-weight:600;">
+                  {{ row.algorithm|upper }}
+                </td>
+              {% endif %}
+              <td>{{ metric.0 }}</td>
+              <td>{{ metric.1 }}</td>
+            </tr>
+          {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <p class="footer-note">* Los valores dependen de <em>size</em> y la secuencia ingresada.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

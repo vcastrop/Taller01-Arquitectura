@@ -8,10 +8,18 @@
         <div class="menu-icon">PS</div>
         <div class="menu-label">Process Scheduling</div>
       </a>
+
       <a href="{% url 'paginacion:index' %}" class="menu-card pr">
         <div class="menu-icon">PR</div>
         <div class="menu-label">Page Replacement</div>
       </a>
+
+      <!-- NUEVA TARJETA: Comparación de Page Replacement -->
+      <a href="{% url 'paginacion:compare' %}" class="menu-card pr">
+        <div class="menu-icon">PC</div>
+        <div class="menu-label">Compare Page Replacement</div>
+      </a>
+
       <a href="{% url 'sync:index' %}" class="menu-card sy">
         <div class="menu-icon">SY</div>
         <div class="menu-label">Synchronization</div>
